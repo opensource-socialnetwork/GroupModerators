@@ -21,6 +21,7 @@ function group_moderators_init() {
 				ossn_register_callback('group', 'delete', 'group_moderator_delete_relations');
 				ossn_register_callback('user', 'delete', 'group_moderator_user_posts_delete');
 				ossn_register_callback('page', 'load:group', 'group_moderator_link');
+				ossn_register_callback('group', 'delete:member', 'group_moderator_member_delete');
 		}
 }
 /**
@@ -174,6 +175,24 @@ function group_moderators_page($hook, $type, $return, $params) {
 				echo ossn_set_page_layout('module', array(
 						'title'   => ossn_print('groupmoderators'),
 						'content' => $content,
+				));
+		}
+}
+/**
+ * Delete relationships from system if member is removed from group
+ *
+ * @param string $callback
+ * @param string $type
+ * @param array  $params option values
+ *
+ * @return void
+ */
+function group_moderator_member_delete($callback, $type, $params) {
+		if(isset($params['user_guid']) && isset($params['group_guid'])) {
+				ossn_delete_relationship(array(
+						'from' => $params['group_guid'],
+						'to'   => $params['user_guid'],
+						'type' => 'group:moderator',
 				));
 		}
 }

@@ -1,7 +1,9 @@
 <?php
+$owner = false;
 if(ossn_isLoggedin() && $params['group']->owner_guid == ossn_loggedin_user()->guid){
 	$members = $params['group']->getMembers();
 	$count = $params['group']->getMembers(true);
+	$owner = true;
 } else {
 	$members = group_moderators_list($params['group']->guid);	
 	$count = group_moderators_list($params['group']->guid, true);
@@ -9,6 +11,7 @@ if(ossn_isLoggedin() && $params['group']->owner_guid == ossn_loggedin_user()->gu
 //add group owner on top
 $user = ossn_user_by_guid($params['group']->owner_guid);
 ?>
+<?php if($owner === false){ ?>
 <div class="ossn-group-members">
 			<div class="row">
             		<div class="col-md-2 col-2 col-xs-12">
@@ -27,6 +30,7 @@ $user = ossn_user_by_guid($params['group']->owner_guid);
             		</div>           
        			</div>
 </div>
+<?php } ?>
 <?php
 if ($members) {
     foreach ($members as $user) {
